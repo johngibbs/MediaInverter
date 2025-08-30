@@ -33,12 +33,8 @@ Microsoft Edge (Chromium) extension that inverts the colors of images and videos
 - `manifest.json` – Manifest V3 definition.
 - `background.js` – Registers and handles the context menu; relays toggle commands to the content script.
 - `content.js` – Locates and toggles media elements relative to the last right‑click target.
-- `icons/` – Placeholder icons (replace with proper PNG artwork before distribution).
+- `icons/` – Contains `icon.svg` source plus generated PNGs. See `icons/README.md` for regeneration instructions.
 - `LICENSE` – MIT License.
-
-## Icon Placeholders
-
-Currently minimal placeholder PNGs (or placeholders to be added). Replace with your own assets (16, 32, 48, 128 px) before publishing to the Edge Add-ons store.
 
 ## Possible Enhancements
 
