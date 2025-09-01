@@ -6,7 +6,15 @@ Microsoft Edge (Chromium) extension that inverts the colors of images and videos
 
 - Right-click directly on any image or video to invert or revert it.
 - Right-click near media (for example inside a container) and the extension attempts to locate nearby `<img>` / `<video>` elements and toggle them.
-- Each media element toggles independently; state is stored inline via a style attribute filter.
+
+## Why It’s Handy (Especially with Dark Reader)
+
+Dark Reader is great for text, but technical diagrams fall into two failure cases:
+
+1. Not inverted at all (e.g. Microsoft Learn) → they stay bright and distracting on a dark page.
+2. Inverted poorly → anti‑aliased stroke edges get mangled, producing jagged lines.
+
+Media Inverter fixes both: invert a skipped diagram so it blends with dark mode while preserving its original smooth edges, or re‑invert a poorly processed one to restore clean anti‑aliasing.
 
 ## How It Works
 
