@@ -12,7 +12,7 @@ function createContextMenu() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: "invert-media",
-      title: "Invert image / video",
+      title: "Invert image / video / SVG",
       contexts: ["all"]
     });
   });

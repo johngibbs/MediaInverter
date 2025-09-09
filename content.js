@@ -1,5 +1,5 @@
-// content.js - Finds and toggles nearby <img>/<video> elements relative to the right-click target.
-// If the right-click target itself is an <img> or <video>, only that element is toggled.
+// content.js - Finds and toggles nearby <img>/<video>/<svg> elements relative to the right-click target.
+// If the right-click target itself is an <img>, <video>, or inline <svg>, only that element is toggled.
 
 (() => {
   let lastRightClickedNode = null;
@@ -73,7 +73,7 @@
   }
 
   /**
-   * Returns nearby <img>/<video> elements relative to the start node.
+   * Returns nearby <img>/<video>/<svg> elements relative to the start node.
    * Behavior:
    *  - If the start node is media, return it as a single-element array.
    *  - Otherwise, at each level (start node, then each ancestor up to a limit),
@@ -83,14 +83,19 @@
    */
   function findNearbyMediaElements(startNode, options = {}) {
     const {
-      maxAncestorLevels = 8,
-      maxDescendantDepth = 5,
+      maxAncestorLevels = 5,
+      maxDescendantDepth = 15,
       maxNodesVisited = 2500,
       maxMediaPerResult = 20
     } = options;
 
-    const mediaTagNames = new Set(["IMG", "VIDEO"]);
-    const isMedia = n => n && mediaTagNames.has(n.nodeName);
+    // Include inline SVG root elements. Normalize tag names to handle SVG case-sensitivity.
+    const mediaTagNames = new Set(["IMG", "VIDEO", "SVG"]);
+    const isMedia = (n) => {
+      if (!(n instanceof Element)) return false;
+      const name = (n.tagName || n.nodeName || "").toUpperCase();
+      return mediaTagNames.has(name);
+    };
 
     if (isMedia(startNode)) {
       return [startNode];
@@ -125,6 +130,12 @@
     let current = startNode;
     let level = 0;
     while (current && level <= maxAncestorLevels && nodesVisited <= maxNodesVisited) {
+      // If we come across a media element while going up the ancestors, return it immediately.
+      //  This is needed for elements like SVG which may contain many child elements. Usually, when
+      //  you right-click on a part of an inline SVG it will actually be a child element of the SVG.
+      if (isMedia(current)) {
+        return [current];
+      }
       const media = bfsDescendants(current, maxDescendantDepth);
       if (media.length > 0) {
         const unique = [];

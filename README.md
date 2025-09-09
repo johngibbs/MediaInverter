@@ -1,11 +1,11 @@
 # Media Inverter
 
-Microsoft Edge (Chromium) extension that inverts the colors of images and videos via a context menu item. (It will also work in other Chromium-based browsers that support Manifest V3, such as Chrome or Brave.)
+ Microsoft Edge (Chromium) extension that inverts the colors of images, videos, and inline SVG via a context menu item. (It will also work in other Chromium-based browsers that support Manifest V3, such as Chrome or Brave.)
 
 ## Features
 
-- Right-click directly on any image or video to invert or revert it.
-- Right-click near media (for example inside a container) and the extension attempts to locate nearby `<img>` / `<video>` elements and toggle them.
+- Right-click directly on any image, video, or inline SVG to invert or revert it.
+- Right-click near media (for example inside a container) and the extension attempts to locate nearby `<img>` / `<video>` / `<svg>` elements and toggle them.
 
 ## Why It’s Handy (Especially with Dark Reader)
 
@@ -22,7 +22,7 @@ Media Inverter fixes both: invert a skipped diagram so it blends with dark mode 
 2. When you select it, a message is sent to the active tab.
 3. The content script:
    - Uses the most recent right‑clicked DOM node as a starting point.
-   - If that node itself is `<img>` or `<video>`, only that element is toggled.
+   - If that node itself is `<img>`, `<video>`, or inline `<svg>`, only that element is toggled.
    - Otherwise, it climbs ancestors; at each ancestor level it breadth‑first searches descendants (depth‑limited) for media.
    - The first set of media it finds is toggled (add or remove `filter: invert(1) hue-rotate(180deg);`).
 
@@ -34,7 +34,7 @@ Media Inverter fixes both: invert a skipped diagram so it blends with dark mode 
    - Chrome: `chrome://extensions`
 3. Enable "Developer mode".
 4. Click “Load unpacked” and select the repository folder.
-5. Right-click any image or video and choose “`Invert image` / video”.
+5. Right-click any image / video / inline SVG and choose “`Invert image / video / SVG`”.
 
 ## File Overview
 

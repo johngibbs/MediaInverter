@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Media Inverter",
-  "version": "0.1.0",
-  "description": "Invert colors of images and videos via context menu. Right-click directly on media or near media to toggle inversion.",
+  "version": "0.2.0",
+  "description": "Invert colors of images, videos, and inline SVG via context menu. Right-click directly on media or near media to toggle inversion.",
   "permissions": ["contextMenus", "activeTab", "scripting"],
   "host_permissions": [
     "<all_urls>"
