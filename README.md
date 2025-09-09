@@ -9,12 +9,12 @@
 
 ## Why It’s Handy (Especially with Dark Reader)
 
-Dark Reader is great for text, but technical diagrams fall into two failure cases:
+Dark Reader doesn’t invert images by default, so white‑background diagrams (e.g., on Microsoft Learn) can be jarring in dark mode.
 
-1. Not inverted at all (e.g. Microsoft Learn) → they stay bright and distracting on a dark page.
-2. Inverted poorly → anti‑aliased stroke edges get mangled, producing jagged lines.
+- Fixing this in Dark Reader requires creating a per‑site rule in a deeply buried configuration screen, which will invert all images unless you craft specific selectors.
+- Those selectors are brittle and can break when the site’s structure changes.
 
-Media Inverter fixes both: invert a skipped diagram so it blends with dark mode while preserving its original smooth edges, or re‑invert a poorly processed one to restore clean anti‑aliasing.
+Media Inverter is simpler: right‑click any image/video/SVG to invert instantly—no rules or selectors.
 
 ## How It Works
 
