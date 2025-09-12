@@ -1,13 +1,6 @@
 // background.js - Registers a context menu item and relays toggle requests to the active tab.
 
-chrome.runtime.onInstalled.addListener(() => {
-  createContextMenu();
-});
-
-chrome.runtime.onStartup.addListener(() => {
-  createContextMenu();
-});
-
+// Utility function to create the context menu item.
 function createContextMenu() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
@@ -18,6 +11,15 @@ function createContextMenu() {
   });
 }
 
+// Create the context menu item when the extension is installed or the browser starts.
+chrome.runtime.onInstalled.addListener(() => {
+  createContextMenu();
+});  
+chrome.runtime.onStartup.addListener(() => {
+  createContextMenu();
+});  
+
+// Handle clicks on the context menu item.
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "invert-media" && tab && tab.id != null) {
     try {

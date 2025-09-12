@@ -1,12 +1,15 @@
 // content.js - Finds and toggles nearby <img>/<video>/<svg> elements relative to the right-click target.
 // If the right-click target itself is an <img>, <video>, or inline <svg>, only that element is toggled.
 
-(() => {
-  let lastRightClickedNode = null;
-
+(() => { 
+  // CSS declaration and style segment used to identify the invert filter in inline styles.
   const INVERT_FILTER_DECLARATION = "filter:invert(1) hue-rotate(180deg);";
   const INVERT_FILTER_STYLE_SEGMENT = ";" + INVERT_FILTER_DECLARATION;
+  
+  // The last node that was right-clicked on (contextmenu event).
+  let lastRightClickedNode = null;
 
+  // Listen for messages from the background script.
   chrome.runtime.onMessage.addListener((message) => {
     if (!message || message.command !== "toggle-invert") return;
     if (!lastRightClickedNode || !document.contains(lastRightClickedNode)) return;
@@ -17,6 +20,7 @@
     }
   });
 
+  // Capture the last right-clicked node using the contextmenu event.
   window.addEventListener(
     "contextmenu",
     (event) => {
@@ -25,6 +29,7 @@
     { capture: true }
   );
 
+  // Observe DOM changes to clear out the lastRightClickedNode if it gets removed from the document.
   const domMutationObserver = new MutationObserver(() => {
     if (lastRightClickedNode && !document.contains(lastRightClickedNode)) {
       lastRightClickedNode = null;
@@ -32,7 +37,7 @@
   });
   domMutationObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-  // Toggles each provided media element independently.
+  // Toggles the invert filter on each element in the array.  
   function toggleMediaElements(mediaElements) {
     mediaElements.forEach(el => {
       const style = el.getAttribute("style") || "";
@@ -44,6 +49,7 @@
     });
   }
 
+  // Adds the invert filter to the element's inline style.
   function addInvertFilter(el) {
     if (!el) return;
     let style = el.getAttribute("style") || "";
@@ -56,6 +62,7 @@
     }
   }
 
+  // Removes the invert filter from the element's inline style.
   function removeInvertFilter(el) {
     if (!el) return;
     let style = el.getAttribute("style") || "";
@@ -83,26 +90,21 @@
    */
   function findNearbyMediaElements(startNode, options = {}) {
     const {
-      maxAncestorLevels = 5,
-      maxDescendantDepth = 15,
-      maxNodesVisited = 2500,
-      maxMediaPerResult = 20
+      maxAncestorLevels = 5,    // How many levels of ancestors to traverse up.
+      maxDescendantDepth = 15,  // How deep to search for descendants.
+      maxNodesVisited = 2500,   // Maximum number of nodes to visit.
+      maxMediaPerResult = 20    // Maximum media elements to return.
     } = options;
 
-    // Include inline SVG root elements. Normalize tag names to handle SVG case-sensitivity.
+    // Helper to identify media elements.
     const mediaTagNames = new Set(["IMG", "VIDEO", "SVG"]);
     const isMedia = (n) => {
       if (!(n instanceof Element)) return false;
       const name = (n.tagName || n.nodeName || "").toUpperCase();
       return mediaTagNames.has(name);
     };
-
-    if (isMedia(startNode)) {
-      return [startNode];
-    }
-
-    let nodesVisited = 0;
-
+    
+    // Helper to perform BFS (breadth-first search) on descendants, to a given depth limit.
     function bfsDescendants(root, depthLimit) {
       const found = [];
       if (!(root instanceof Element)) return found;
@@ -127,15 +129,17 @@
       return found;
     }
 
+    // If the start node is itself media, return it immediately.
+    if (isMedia(startNode)) {
+      return [startNode];
+    }  
+
+    // Otherwise, traverse up ancestors, performing BFS at each level.
     let current = startNode;
     let level = 0;
+    let nodesVisited = 0;
+
     while (current && level <= maxAncestorLevels && nodesVisited <= maxNodesVisited) {
-      // If we come across a media element while going up the ancestors, return it immediately.
-      //  This is needed for elements like SVG which may contain many child elements. Usually, when
-      //  you right-click on a part of an inline SVG it will actually be a child element of the SVG.
-      if (isMedia(current)) {
-        return [current];
-      }
       const media = bfsDescendants(current, maxDescendantDepth);
       if (media.length > 0) {
         const unique = [];
@@ -151,6 +155,12 @@
       }
       current = current.parentElement;
       level++;
+      // If we come across a media element while going up the ancestor chain, return it immediately.
+      //  This is needed for elements like SVG which may contain many child elements. Usually, when
+      //  you right-click on a part of an inline SVG it will actually be a child element of the SVG.
+      if (isMedia(current)) {
+        return [current];
+      }
     }
 
     return [];
