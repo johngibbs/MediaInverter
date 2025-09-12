@@ -9,7 +9,7 @@
 
 ## Why It’s Handy (Especially with Dark Reader)
 
-Dark Reader doesn’t invert images by default, so white‑background diagrams (e.g., on Microsoft Learn) can be jarring in dark mode.
+[Dark Reader](https://microsoftedge.microsoft.com/addons/detail/dark-reader/ifoakfbpdcdoeenechcleahebpibofpc) doesn’t invert images by default, so white‑background diagrams (e.g., on Microsoft Learn) can be jarring in dark mode.
 
 - Fixing this in Dark Reader requires creating a per‑site rule in a deeply buried configuration screen, which will invert all images unless you craft specific selectors.
 - Those selectors are brittle and can break when the site’s structure changes.
