@@ -1,4 +1,4 @@
-# Media Inverter
+# <img src="icons/icon.svg" alt="Media Inverter" width="30" height="30"/> Media Inverter
 
  Microsoft Edge (Chromium) extension that inverts the colors of images, videos, and inline SVG via a context menu item. (It will also work in other Chromium-based browsers that support Manifest V3, such as Chrome or Brave.)
 
