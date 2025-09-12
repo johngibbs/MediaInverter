@@ -18,7 +18,7 @@ Media Inverter is simpler: right‑click any image/video/SVG to invert instantly
 
 ## How It Works
 
-1. A context menu item (“Invert image / video”) is registered in the background script.
+1. A context menu item (“Invert image / video / SVG”) is registered in the background script.
 2. When you select it, a message is sent to the active tab.
 3. The content script:
    - Uses the most recent right‑clicked DOM node as a starting point.
