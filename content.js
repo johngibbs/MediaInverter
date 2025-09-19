@@ -90,10 +90,11 @@
    */
   function findNearbyMediaElements(startNode, options = {}) {
     const {
-      maxAncestorLevels = 5,    // How many levels of ancestors to traverse up.
-      maxDescendantDepth = 15,  // How deep to search for descendants.
-      maxNodesVisited = 2500,   // Maximum number of nodes to visit.
-      maxMediaPerResult = 20    // Maximum media elements to return.
+      minAncestorLevelsBeforeSearch = 2, // How many ancestor levels to ascend before searching.
+      maxAncestorLevels = 5,             // How many levels of ancestors to traverse up.
+      maxDescendantDepth = 15,           // How deep to search for descendants.
+      maxNodesVisited = 2500,            // Maximum number of nodes to visit.
+      maxMediaPerResult = 20,            // Maximum media elements to return.
     } = options;
 
     // Helper to identify media elements.
@@ -134,24 +135,32 @@
       return [startNode];
     }  
 
-    // Otherwise, traverse up ancestors, performing BFS at each level.
+    // Otherwise, traverse up ancestors, performing BFS at each level starting at the configured
+    //  minimum ancestor level.
     let current = startNode;
     let level = 0;
     let nodesVisited = 0;
 
-    while (current && level <= maxAncestorLevels && nodesVisited <= maxNodesVisited) {
-      const media = bfsDescendants(current, maxDescendantDepth);
-      if (media.length > 0) {
-        const unique = [];
-        const seen = new Set();
-        for (const el of media) {
-          if (!seen.has(el)) {
-            unique.push(el);
-            seen.add(el);
-            if (unique.length >= maxMediaPerResult) break;
+    const effectiveMaxAncestorLevels = Math.max(maxAncestorLevels, minAncestorLevelsBeforeSearch);
+
+    while (current && level <= effectiveMaxAncestorLevels && nodesVisited <= maxNodesVisited) {
+      // Start searching once we've reached the minimum ancestor level, or earlier if we hit the
+      //  document root element.
+      const atDocumentRoot = !current.parentElement;
+      if (level >= minAncestorLevelsBeforeSearch || atDocumentRoot) {
+        const media = bfsDescendants(current, maxDescendantDepth);
+        if (media.length > 0) {
+          const unique = [];
+          const seen = new Set();
+          for (const el of media) {
+            if (!seen.has(el)) {
+              unique.push(el);
+              seen.add(el);
+              if (unique.length >= maxMediaPerResult) break;
+            }
           }
+          return unique;
         }
-        return unique;
       }
       current = current.parentElement;
       level++;
