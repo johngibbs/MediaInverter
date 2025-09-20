@@ -1,4 +1,5 @@
 # This script packages the Media Inverter browser extension into a zip file for distribution.
+# It should be run from the root directory of the repository (no arguments needed).
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
