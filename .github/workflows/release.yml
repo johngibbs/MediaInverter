@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package extension
+        shell: pwsh
+        run: |
+          pwsh -File scripts/package-extension.ps1
+
+      - name: Generate checksum
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem -Path dist -Filter *.zip | Select-Object -First 1
+          if ($zip)
+          {
+            $hash = Get-FileHash -Path $zip.FullName -Algorithm MD5
+            "$($hash.Hash)  $($zip.Name)" | Out-File dist/checksums.md5 -Encoding utf8
+          }
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
