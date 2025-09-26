@@ -3,7 +3,7 @@
  Microsoft Edge (Chromium) extension that inverts the colors of images, videos, and inline SVG via a context menu item. (It will also work in other Chromium-based browsers that support Manifest V3, such as Chrome or Brave.)
 
 <p align="center">
-   <img src="images/promo_1280x800.png" alt="Media Inverter preview" width="900" /><br/>
+   <img src="images/Promo_1280x800.png" alt="Media Inverter preview" width="900" /><br/>
    <em>Right‑click to invert images, videos, and inline SVG</em>
 </p>
 
